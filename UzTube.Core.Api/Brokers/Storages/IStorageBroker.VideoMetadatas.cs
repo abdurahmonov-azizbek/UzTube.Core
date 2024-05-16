@@ -1,12 +1,18 @@
-﻿using UzTube.Core.Api.Models.VideoMetadatas;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
 
-namespace UzTube.Core.Api.Brokers.Storages;
+using UzTube.Core.Api.Models.VideoMetadatas;
 
-public partial interface IStorageBroker
+namespace UzTube.Core.Api.Brokers.Storages
 {
-    ValueTask<VideoMetadata> InsertVideoMetadataAsync(VideoMetadata videoMetadata, CancellationToken cancellationToken = default);
-    IQueryable<VideoMetadata> SelectAllVideoMetadatas();
-    ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    ValueTask<VideoMetadata> UpdateVideoMetadataAsync(VideoMetadata videoMetadata, CancellationToken cancellationToken = default);
-    ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata, CancellationToken cancellationToken = default);
+    public partial interface IStorageBroker
+    {
+        ValueTask<VideoMetadata> InsertVideoMetadataAsync(VideoMetadata videoMetadata);
+        IQueryable<VideoMetadata> SelectAllVideoMetadatas();
+        ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid id);
+        ValueTask<VideoMetadata> UpdateVideoMetadataAsync(VideoMetadata videoMetadata);
+        ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata);
+    }
 }
