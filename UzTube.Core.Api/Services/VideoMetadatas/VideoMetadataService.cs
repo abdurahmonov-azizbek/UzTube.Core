@@ -18,6 +18,6 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         }
 
         public ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata) =>
-            throw new NotImplementedException();
+            storageBroker.InsertVideoMetadataAsync(videoMetadata);
     }
 }
