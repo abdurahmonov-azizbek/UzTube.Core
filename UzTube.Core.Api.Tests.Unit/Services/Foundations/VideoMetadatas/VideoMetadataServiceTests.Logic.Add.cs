@@ -39,5 +39,5 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
-    }
+    }   
 }
