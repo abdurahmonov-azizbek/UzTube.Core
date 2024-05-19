@@ -8,7 +8,7 @@ using UzTube.Core.Api.Models.VideoMetadatas;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
-    internal class VideoMetadataService : IVideoMetadataService
+    public partial class VideoMetadataService : IVideoMetadataService
     {
         private readonly IStorageBroker storageBroker;
 
@@ -18,6 +18,11 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         }
 
         public ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata) =>
-            storageBroker.InsertVideoMetadataAsync(videoMetadata);
+        TryCatch(async () =>
+        {
+            ValidateVideoMetadata(videoMetadata);
+
+            return await storageBroker.InsertVideoMetadataAsync(videoMetadata);
+        });
     }
 }
