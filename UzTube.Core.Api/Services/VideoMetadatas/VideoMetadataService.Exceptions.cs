@@ -8,7 +8,7 @@ using UzTube.Core.Api.Models.VideoMetadatas;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
-    public partial class VideoMetadataService
+    internal partial class VideoMetadataService
     {
         private delegate ValueTask<VideoMetadata> ReturningVideoMetadataFunction();
 
@@ -21,14 +21,13 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
             catch (NullVideoMetadataException nullVideoMetadataException)
             {
                 throw CreateAndLogValidationException(nullVideoMetadataException);
-
             }
         }
 
         private VideoMetadataValidationException CreateAndLogValidationException(NullVideoMetadataException nullVideoMetadataException)
         {
             var videoMetadataValidationException =
-                new VideoMetadataValidationException(nullVideoMetadataException);
+                new VideoMetadataValidationException("VideoMetadata validation error occured, fix errors and try again.", nullVideoMetadataException);
 
             return videoMetadataValidationException;
         }

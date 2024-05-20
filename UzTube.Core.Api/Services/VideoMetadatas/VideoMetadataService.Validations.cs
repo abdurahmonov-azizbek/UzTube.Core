@@ -8,13 +8,13 @@ using UzTube.Core.Api.Models.VideoMetadatas;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
-    public partial class VideoMetadataService
+    internal partial class VideoMetadataService
     {
         private void ValidateVideoMetadata(VideoMetadata videoMetadata)
         {
             if (videoMetadata is null)
             {
-                throw new NullVideoMetadataException();
+                throw new NullVideoMetadataException("VideoMetadata is null.");
             }
         }
     }

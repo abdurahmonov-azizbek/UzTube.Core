@@ -9,8 +9,8 @@ namespace UzTube.Core.Api.Models.Exceptions
 {
     public class NullVideoMetadataException : Xeption
     {
-        public NullVideoMetadataException()
-            : base(message: "VideoMetadata is null.")
+        public NullVideoMetadataException(string message)
+            : base(message: message)
         { }
     }
 }

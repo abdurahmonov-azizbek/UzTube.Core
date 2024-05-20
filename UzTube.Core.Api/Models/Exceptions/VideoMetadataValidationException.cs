@@ -9,8 +9,8 @@ namespace UzTube.Core.Api.Models.Exceptions
 {
     public class VideoMetadataValidationException : Xeption
     {
-        public VideoMetadataValidationException(Xeption innerException)
-            : base(message: "VideoMetadata validation error occured, fix errors and try again.", innerException)
+        public VideoMetadataValidationException(string message, Xeption innerException)
+            : base(message: message, innerException: innerException)
         { }
-    }
+}
 }

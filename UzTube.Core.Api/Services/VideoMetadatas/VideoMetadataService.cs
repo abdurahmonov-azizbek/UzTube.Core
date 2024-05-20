@@ -8,7 +8,7 @@ using UzTube.Core.Api.Models.VideoMetadatas;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
-    public partial class VideoMetadataService : IVideoMetadataService
+    internal partial class VideoMetadataService : IVideoMetadataService
     {
         private readonly IStorageBroker storageBroker;
 

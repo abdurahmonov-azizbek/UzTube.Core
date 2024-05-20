@@ -17,10 +17,12 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
         {
             //given
             VideoMetadata nullVideoMetadata = null;
-            var nullVideoMetadataException = new NullVideoMetadataException();
+            var nullVideoMetadataException = new NullVideoMetadataException("VideoMetadata is null.");
 
             var expectedVideoMetadataValidationException =
-                new VideoMetadataValidationException(nullVideoMetadataException);
+                new VideoMetadataValidationException(
+                    "VideoMetadata validation error occured, fix errors and try again.",
+                        nullVideoMetadataException);
 
             //when
             ValueTask<VideoMetadata> addVideoMetadata =
