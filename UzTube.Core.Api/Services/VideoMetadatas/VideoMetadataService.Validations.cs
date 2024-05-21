@@ -14,7 +14,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         {
             if (videoMetadata is null)
             {
-                throw new NullVideoMetadataException("VideoMetadata is null.");
+                throw new NullVideoMetadataException("Video metadata is null.");
             }
         }
     }

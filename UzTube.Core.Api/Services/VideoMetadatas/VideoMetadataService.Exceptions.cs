@@ -27,7 +27,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         private VideoMetadataValidationException CreateAndLogValidationException(NullVideoMetadataException nullVideoMetadataException)
         {
             var videoMetadataValidationException =
-                new VideoMetadataValidationException("VideoMetadata validation error occured, fix errors and try again.", nullVideoMetadataException);
+                new VideoMetadataValidationException("Video metadata validation error occured, fix errors and try again.", nullVideoMetadataException);
 
             return videoMetadataValidationException;
         }
