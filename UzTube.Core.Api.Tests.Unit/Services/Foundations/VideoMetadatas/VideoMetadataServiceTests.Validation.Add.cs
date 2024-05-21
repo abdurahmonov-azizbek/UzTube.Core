@@ -54,7 +54,7 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                 Title = invalidText
             };
 
-            var invalidVideoMetadataException = 
+            var invalidVideoMetadataException =
                 new InvalidVideoMetadataException(
                     message: "Video metadata is invalid.");
 
@@ -96,7 +96,7 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
-                    Times.Once);
+                    Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

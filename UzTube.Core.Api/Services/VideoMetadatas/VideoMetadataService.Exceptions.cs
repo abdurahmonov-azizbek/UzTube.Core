@@ -5,6 +5,7 @@
 
 using UzTube.Core.Api.Models.Exceptions;
 using UzTube.Core.Api.Models.VideoMetadatas;
+using Xeptions;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
@@ -22,12 +23,16 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
             {
                 throw CreateAndLogValidationException(nullVideoMetadataException);
             }
+            catch (InvalidVideoMetadataException invalidVideoMetadataException)
+            {
+                throw CreateAndLogValidationException(invalidVideoMetadataException);
+            }
         }
 
-        private VideoMetadataValidationException CreateAndLogValidationException(NullVideoMetadataException nullVideoMetadataException)
+        private VideoMetadataValidationException CreateAndLogValidationException(Xeption innerException)
         {
             var videoMetadataValidationException =
-                new VideoMetadataValidationException("Video metadata validation error occured, fix errors and try again.", nullVideoMetadataException);
+                new VideoMetadataValidationException("Video metadata validation error occured, fix errors and try again.", innerException);
 
             return videoMetadataValidationException;
         }

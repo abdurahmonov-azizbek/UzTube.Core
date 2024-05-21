@@ -20,7 +20,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         public ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata) =>
         TryCatch(async () =>
         {
-            ValidateVideoMetadata(videoMetadata);
+            ValidateVideoMetadataOnAdd(videoMetadata);
 
             return await storageBroker.InsertVideoMetadataAsync(videoMetadata);
         });
