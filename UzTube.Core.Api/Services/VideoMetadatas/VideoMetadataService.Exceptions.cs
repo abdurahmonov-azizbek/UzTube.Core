@@ -3,6 +3,8 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using Microsoft.Data.SqlClient;
+using System.Data.SqlTypes;
 using UzTube.Core.Api.Models.Exceptions;
 using UzTube.Core.Api.Models.VideoMetadatas;
 using Xeptions;
@@ -27,6 +29,25 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
             {
                 throw CreateAndLogValidationException(invalidVideoMetadataException);
             }
+            catch (SqlException sqlException)
+            {
+                FailedVideoMetadataStorageException failedVideoMetadataStorageException =
+                    new FailedVideoMetadataStorageException(
+                        message: "Failed video metadata error occured, contact support.",
+                        innerException: sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
+            }
+        }
+
+        private Exception CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            VideoMetadataDependencyException videoMetadataDependencyException =
+                new VideoMetadataDependencyException(
+                    message: "Video metadata dependency error occured, fix the errors and try again.",
+                    innerException: exception);
+
+            return videoMetadataDependencyException;
         }
 
         private VideoMetadataValidationException CreateAndLogValidationException(Xeption innerException)

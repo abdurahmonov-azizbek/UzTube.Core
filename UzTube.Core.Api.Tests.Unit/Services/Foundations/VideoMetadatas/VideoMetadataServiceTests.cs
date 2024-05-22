@@ -3,7 +3,9 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using Microsoft.Data.SqlClient;
 using Moq;
+using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
 using UzTube.Core.Api.Brokers.Storages;
 using UzTube.Core.Api.Models.VideoMetadatas;
@@ -39,5 +41,8 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             return filler;
         }
+
+        private static SqlException GetSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
     }
 }
