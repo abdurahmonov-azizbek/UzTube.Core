@@ -5,25 +5,31 @@
 
 using Microsoft.Data.SqlClient;
 using Moq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
+using UzTube.Core.Api.Brokers.Loggings;
 using UzTube.Core.Api.Brokers.Storages;
 using UzTube.Core.Api.Models.VideoMetadatas;
 using UzTube.Core.Api.Services.VideoMetadatas;
+using Xeptions;
 
 namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 {
     public partial class VideoMetadataServiceTests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IVideoMetadataService videoMetadataService;
 
         public VideoMetadataServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.videoMetadataService = new VideoMetadataService(
-                storageBroker: this.storageBrokerMock.Object);
+                storageBroker: this.storageBrokerMock.Object,
+                loggingBroker: this.loggingBrokerMock.Object);
         }
 
         private static DateTimeOffset GetRandomDateTime() =>
@@ -41,6 +47,9 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             return filler;
         }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static SqlException GetSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));

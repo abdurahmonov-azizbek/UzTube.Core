@@ -98,7 +98,12 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                 broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
                     Times.Never);
 
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataValidationException))),
+                   Times.Once);
+
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

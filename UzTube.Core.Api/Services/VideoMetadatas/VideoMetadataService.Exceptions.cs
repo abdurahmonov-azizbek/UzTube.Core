@@ -46,13 +46,19 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
                     message: "Video metadata dependency error occured, fix the errors and try again.",
                     innerException: exception);
 
+            this.loggingBroker.LogCritical(videoMetadataDependencyException);
+
             return videoMetadataDependencyException;
         }
 
         private VideoMetadataValidationException CreateAndLogValidationException(Xeption innerException)
         {
             var videoMetadataValidationException =
-                new VideoMetadataValidationException("Video metadata validation error occured, fix errors and try again.", innerException);
+                new VideoMetadataValidationException(
+                    message: "Video metadata validation error occured, fix errors and try again.",
+                    innerException: innerException);
+
+            this.loggingBroker.LogError(videoMetadataValidationException);
 
             return videoMetadataValidationException;
         }

@@ -33,24 +33,30 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertVideoMetadataAsync(someVideoMetadata))
-                    .ThrowsAsync(sqlException); 
+                    .ThrowsAsync(sqlException);
 
             //when
             ValueTask<VideoMetadata> addVideoMetadata =
                 this.videoMetadataService.AddVideoMetadataAsync(someVideoMetadata);
 
-            VideoMetadataDependencyException actualVideoMetadataDependency =
+            VideoMetadataDependencyException actualVideoMetadataDependencyException =
                 await Assert.ThrowsAsync<VideoMetadataDependencyException>(addVideoMetadata.AsTask);
 
             //then
-            actualVideoMetadataDependency.Should()
+            actualVideoMetadataDependencyException.Should()
                 .BeEquivalentTo(expectedVideoMetadataDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertVideoMetadataAsync(someVideoMetadata),
                     Times.Once);
 
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    actualVideoMetadataDependencyException))),
+                        Times.Once());
+
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
