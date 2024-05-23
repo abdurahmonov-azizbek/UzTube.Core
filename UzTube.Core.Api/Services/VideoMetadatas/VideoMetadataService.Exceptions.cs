@@ -4,7 +4,6 @@
 // -------------------------------------------------------
 
 using Microsoft.Data.SqlClient;
-using System.Data.SqlTypes;
 using UzTube.Core.Api.Models.Exceptions;
 using UzTube.Core.Api.Models.VideoMetadatas;
 using Xeptions;

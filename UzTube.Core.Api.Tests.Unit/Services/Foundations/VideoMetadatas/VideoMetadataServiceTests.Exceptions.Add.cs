@@ -33,7 +33,8 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertVideoMetadataAsync(someVideoMetadata))
-                    .ThrowsAsync(sqlException);
+                    .ThrowsAsync(sqlException); 
+
             //when
             ValueTask<VideoMetadata> addVideoMetadata =
                 this.videoMetadataService.AddVideoMetadataAsync(someVideoMetadata);
