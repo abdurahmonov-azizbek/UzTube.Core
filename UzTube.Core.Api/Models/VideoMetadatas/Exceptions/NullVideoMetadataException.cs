@@ -5,7 +5,7 @@
 
 using Xeptions;
 
-namespace UzTube.Core.Api.Models.Exceptions
+namespace UzTube.Core.Api.Models.VideoMetadatas.Exceptions
 {
     public class NullVideoMetadataException : Xeption
     {

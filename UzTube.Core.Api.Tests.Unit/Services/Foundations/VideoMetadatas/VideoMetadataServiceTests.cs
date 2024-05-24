@@ -53,5 +53,11 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
         private static SqlException GetSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static string GetRandomString() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 9, max: 99).GetValue();
     }
 }

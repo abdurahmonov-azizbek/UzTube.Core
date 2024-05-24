@@ -5,8 +5,8 @@
 
 using FluentAssertions;
 using Moq;
-using UzTube.Core.Api.Models.Exceptions;
 using UzTube.Core.Api.Models.VideoMetadatas;
+using UzTube.Core.Api.Models.VideoMetadatas.Exceptions;
 
 namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 {

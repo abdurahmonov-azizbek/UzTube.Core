@@ -3,14 +3,15 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using UzTube.Core.Api.Models.Exceptions;
+using UzTube.Core.Api.Models.VideoMetadatas.Exceptions;
 using UzTube.Core.Api.Models.VideoMetadatas;
+using UzTube.Core.Api.Models.VideoMetadatas.Exceptions;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
     internal partial class VideoMetadataService
     {
-        private void ValidateVideoMetadataOnAdd(VideoMetadata videoMetadata)        
+        private void ValidateVideoMetadataOnAdd(VideoMetadata videoMetadata)
         {
             ValidateVideoMetadata(videoMetadata);
 

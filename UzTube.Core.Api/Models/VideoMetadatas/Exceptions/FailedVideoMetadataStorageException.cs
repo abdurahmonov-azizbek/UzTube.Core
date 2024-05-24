@@ -5,11 +5,11 @@
 
 using Xeptions;
 
-namespace UzTube.Core.Api.Models.Exceptions
+namespace UzTube.Core.Api.Models.VideoMetadatas.Exceptions
 {
-    public class VideoMetadataDependencyException : Xeption
+    public class FailedVideoMetadataStorageException : Xeption
     {
-        public VideoMetadataDependencyException(string message, Xeption innerException)
+        public FailedVideoMetadataStorageException(string message, Exception innerException)
             : base(message, innerException)
         { }
     }

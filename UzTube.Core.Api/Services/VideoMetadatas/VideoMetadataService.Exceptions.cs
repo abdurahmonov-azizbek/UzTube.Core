@@ -3,9 +3,10 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
-using UzTube.Core.Api.Models.Exceptions;
 using UzTube.Core.Api.Models.VideoMetadatas;
+using UzTube.Core.Api.Models.VideoMetadatas.Exceptions;
 using Xeptions;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
@@ -37,6 +38,25 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
             }
+            catch (DuplicateKeyException dublicateKeyException)
+            {
+                var alreadyExistsVideoMetadataException = new AlreadyExitsVideoMetadataException(
+                    message: "Video metadata already exists.",
+                    innerException: dublicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
+            }
+        }
+
+        private Exception CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var videoMetadataDependencyValidationException = new VideoMetadataDependencyValidationException(
+                message: "Video metadata Dependency validation error occured , fix the errors and try again",
+                innerException: exception);
+
+            this.loggingBroker.LogError(videoMetadataDependencyValidationException);
+
+            return videoMetadataDependencyValidationException;
         }
 
         private Exception CreateAndLogCriticalDependencyException(Xeption exception)
