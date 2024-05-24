@@ -5,6 +5,7 @@
 
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using UzTube.Core.Api.Models.VideoMetadatas;
 using UzTube.Core.Api.Models.VideoMetadatas.Exceptions;
 using Xeptions;
@@ -46,6 +47,14 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedVideoMetadataStorageException = new FailedVideoMetadataStorageException(
+                    message: "Failed video metadata error occured, contact support.",
+                    innerException: databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedVideoMetadataStorageException);
+            }
             catch (Exception exception)
             {
                 var failedVideoMetadataServiceException = new FailedVideoMetadataServiceException(
@@ -54,6 +63,17 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogServiceException(failedVideoMetadataServiceException);
             }
+        }
+
+        private Exception CreateAndLogDependencyException(Xeption exception)
+        {
+            var videoMetadataDependencyException = new VideoMetadataDependencyException(
+                message: "Video metadata dependency error occured, fix the errors and try again.",
+                innerException: exception);
+
+            this.loggingBroker.LogError(videoMetadataDependencyException);
+
+            return videoMetadataDependencyException;
         }
 
         private Exception CreateAndLogServiceException(Xeption exception)
