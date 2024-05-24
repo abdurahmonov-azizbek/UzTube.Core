@@ -53,7 +53,7 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     actualVideoMetadataDependencyException))),
-                        Times.Once());
+                        Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -112,7 +112,7 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                 innerException: serviceException);
 
             var expectedVideoMetadataServiceException = new VideoMetadataServiceException(
-                message: "Video metadata service error occured , contact support.",
+                message: "Video metadata service error occured, contact support.",
                 innerException: failedVideoMetadataServiceException);
 
             this.storageBrokerMock.Setup(broker =>

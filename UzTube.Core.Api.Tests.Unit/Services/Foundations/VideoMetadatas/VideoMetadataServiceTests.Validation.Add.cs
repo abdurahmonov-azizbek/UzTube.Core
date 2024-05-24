@@ -21,8 +21,8 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
-                    "Video metadata validation error occured, fix errors and try again.",
-                        nullVideoMetadataException);
+                    message: "Video metadata validation error occured, fix errors and try again.",
+                    innerException: nullVideoMetadataException);
 
             //when
             ValueTask<VideoMetadata> addVideoMetadata =
@@ -39,6 +39,7 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                 broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]

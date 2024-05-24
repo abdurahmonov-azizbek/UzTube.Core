@@ -59,7 +59,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         private Exception CreateAndLogServiceException(Xeption exception)
         {
             var videoMetadataServiceException = new VideoMetadataServiceException(
-                message: "Video metadata service error occured , contact support.",
+                message: "Video metadata service error occured, contact support.",
                 innerException: exception);
 
             this.loggingBroker.LogError(videoMetadataServiceException);

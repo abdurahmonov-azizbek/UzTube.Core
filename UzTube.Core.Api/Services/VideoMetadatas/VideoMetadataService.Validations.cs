@@ -5,7 +5,6 @@
 
 using UzTube.Core.Api.Models.VideoMetadatas.Exceptions;
 using UzTube.Core.Api.Models.VideoMetadatas;
-using UzTube.Core.Api.Models.VideoMetadatas.Exceptions;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
@@ -20,7 +19,14 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
                 (Rule: IsInvalid(videoMetadata.Title), Parameter: nameof(VideoMetadata.Title)),
                 (Rule: IsInvalid(videoMetadata.BlobPath), Parameter: nameof(VideoMetadata.BlobPath)),
                 (Rule: IsInvalid(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
-                (Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)));
+                (Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)),
+
+                 (Rule: IsNotSame(
+                    firstDate: videoMetadata.CreatedDate,
+                    secondDate: videoMetadata.UpdatedDate,
+                    secondDateName: nameof(VideoMetadata.UpdatedDate)),
+
+                Parameter: nameof(VideoMetadata.CreatedDate)));
         }
 
         private void ValidateVideoMetadata(VideoMetadata videoMetadata)
@@ -49,6 +55,15 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
             Condition = date == default,
             Message = "Date is required"
         };
+
+        private static dynamic IsNotSame(
+           DateTimeOffset firstDate,
+           DateTimeOffset secondDate,
+           string secondDateName) => new
+           {
+               Condition = firstDate != secondDate,
+               Message = $"Date is not same as {secondDateName}"
+           };
 
         private void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
