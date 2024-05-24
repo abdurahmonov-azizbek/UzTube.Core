@@ -20,8 +20,8 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
                 (Rule: IsInvalid(videoMetadata.BlobPath), Parameter: nameof(VideoMetadata.BlobPath)),
                 (Rule: IsInvalid(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
                 (Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)),
-
-                 (Rule: IsNotSame(
+                (Rule: IsNotRecent(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
+                (Rule: IsNotSame(
                     firstDate: videoMetadata.CreatedDate,
                     secondDate: videoMetadata.UpdatedDate,
                     secondDateName: nameof(VideoMetadata.UpdatedDate)),
@@ -64,6 +64,20 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
                Condition = firstDate != secondDate,
                Message = $"Date is not same as {secondDateName}"
            };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTimeOffset();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
+        }
 
         private void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
