@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="Uztube.Core.Api.Tests.Unit"/>
+		<InternalsVisibleTo Include="Uztube.Core.Api.Tests.Unit" />
 	</ItemGroup>
 
 </Project>
