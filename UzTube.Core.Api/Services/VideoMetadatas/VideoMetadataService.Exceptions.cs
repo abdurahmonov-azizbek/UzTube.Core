@@ -46,6 +46,25 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
             }
+            catch (Exception exception)
+            {
+                var failedVideoMetadataServiceException = new FailedVideoMetadataServiceException(
+                    message: "Failed video metadata service error occured, please contact support.",
+                    innerException: exception);
+
+                throw CreateAndLogServiceException(failedVideoMetadataServiceException);
+            }
+        }
+
+        private Exception CreateAndLogServiceException(Xeption exception)
+        {
+            var videoMetadataServiceException = new VideoMetadataServiceException(
+                message: "Video metadata service error occured , contact support.",
+                innerException: exception);
+
+            this.loggingBroker.LogError(videoMetadataServiceException);
+
+            return videoMetadataServiceException;
         }
 
         private Exception CreateAndLogDependencyValidationException(Xeption exception)
