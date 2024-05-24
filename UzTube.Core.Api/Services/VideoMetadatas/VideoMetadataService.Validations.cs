@@ -12,7 +12,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
     {
         private void ValidateVideoMetadataOnAdd(VideoMetadata videoMetadata)
         {
-            ValidateVideoMetadata(videoMetadata);
+            ValidateVideoMetadataNotNull(videoMetadata);
 
             Validate(
                 (Rule: IsInvalid(videoMetadata.Id), Parameter: nameof(VideoMetadata.Id)),
@@ -29,7 +29,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
                 Parameter: nameof(VideoMetadata.CreatedDate)));
         }
 
-        private void ValidateVideoMetadata(VideoMetadata videoMetadata)
+        private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)
         {
             if (videoMetadata is null)
             {

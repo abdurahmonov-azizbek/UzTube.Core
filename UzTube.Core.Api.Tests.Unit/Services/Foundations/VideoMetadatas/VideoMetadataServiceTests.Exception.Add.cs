@@ -31,9 +31,8 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                     message: "Video metadata dependency error occured, fix the errors and try again.",
                     innerException: failedVideoMetadataStorageException);
 
-            this.storageBrokerMock.Setup(broker =>
-                broker.InsertVideoMetadataAsync(someVideoMetadata))
-                    .ThrowsAsync(sqlException);
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset()).Throws(sqlException);
 
             //when
             ValueTask<VideoMetadata> addVideoMetadata =
@@ -46,27 +45,26 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             actualVideoMetadataDependencyException.Should()
                 .BeEquivalentTo(expectedVideoMetadataDependencyException);
 
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertVideoMetadataAsync(someVideoMetadata),
-                    Times.Once);
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     actualVideoMetadataDependencyException))),
                         Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnAddIfDublicateKeyErrorOccursAndLogItAsync()
         {
             //given
-            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
-            var randomMessage = GetRandomString();
-
-            var duplicateKeyException = new DuplicateKeyException(randomMessage);
+            string someMessage = GetRandomString();
+            VideoMetadata randomVideoMetadata = new VideoMetadata();
+            var duplicateKeyException = new DuplicateKeyException(someMessage);
             var alreadyExistsVideoMetadataException = new AlreadyExitsVideoMetadataException(
                 message: "Video metadata already exists.",
                 innerException: duplicateKeyException);
@@ -76,8 +74,8 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                     message: "Video metadata Dependency validation error occured , fix the errors and try again",
                     innerException: alreadyExistsVideoMetadataException);
 
-            this.storageBrokerMock.Setup(broker =>
-                broker.InsertVideoMetadataAsync(randomVideoMetadata)).ThrowsAsync(duplicateKeyException);
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTimeOffset())
+                .Throws(duplicateKeyException);
 
             //when
             ValueTask<VideoMetadata> addVideoMetadataTask = this.videoMetadataService
@@ -90,23 +88,23 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             actualVideoMetadataDependencyValidationException.Should()
                 .BeEquivalentTo(expectedVideoMetadataDependencyValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTimeOffset(), Times.Once);
+
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
-            SameExceptionAs(expectedVideoMetadataDependencyValidationException))), Times.Once);
+                SameExceptionAs(expectedVideoMetadataDependencyValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker =>
-                    broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()), Times.Once);
-
-            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             //given
-            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
+            VideoMetadata randomVideoMetadata = new VideoMetadata();
             var serviceException = new Exception();
-
             var failedVideoMetadataServiceException = new FailedVideoMetadataServiceException(
                 message: "Failed video metadata service error occured, please contact support.",
                 innerException: serviceException);
@@ -115,8 +113,8 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                 message: "Video metadata service error occured, contact support.",
                 innerException: failedVideoMetadataServiceException);
 
-            this.storageBrokerMock.Setup(broker =>
-                broker.InsertVideoMetadataAsync(randomVideoMetadata)).ThrowsAsync(serviceException);
+            this.dateTimeBrokerMock.Setup(broker => broker.GetCurrentDateTimeOffset())
+                 .Throws(serviceException);
 
             //when
             ValueTask<VideoMetadata> addVideoMetadataTask = this.videoMetadataService.AddVideoMetadataAsync(randomVideoMetadata);
@@ -127,12 +125,13 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             //then
             actualVideoMetadataServiceException.Should().BeEquivalentTo(expectedVideoMetadataServiceException);
 
-            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
-                SameExceptionAs(expectedVideoMetadataServiceException))), Times.Once);
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
 
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertVideoMetadataAsync(randomVideoMetadata), Times.Once);
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(SameExceptionAs(
+                expectedVideoMetadataServiceException))), Times.Once);
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

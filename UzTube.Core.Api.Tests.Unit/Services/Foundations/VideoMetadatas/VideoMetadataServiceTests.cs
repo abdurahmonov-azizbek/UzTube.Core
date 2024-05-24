@@ -8,6 +8,7 @@ using Moq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
+using UzTube.Core.Api.Brokers.DateTimes;
 using UzTube.Core.Api.Brokers.Loggings;
 using UzTube.Core.Api.Brokers.Storages;
 using UzTube.Core.Api.Models.VideoMetadatas;
@@ -20,30 +21,36 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly IVideoMetadataService videoMetadataService;
 
         public VideoMetadataServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
             this.videoMetadataService = new VideoMetadataService(
                 storageBroker: this.storageBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                loggingBroker: this.loggingBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
 
         public static VideoMetadata CreateRandomVideoMetadata() =>
-            CreateVideoMetadataFiller().Create();
+            CreateVideoMetadataFiller(GetRandomDateTime()).Create();
 
-        private static Filler<VideoMetadata> CreateVideoMetadataFiller()
+        public static VideoMetadata CreateRandomVideoMetadata(DateTimeOffset date) =>
+           CreateVideoMetadataFiller(date).Create();
+
+        private static Filler<VideoMetadata> CreateVideoMetadataFiller(DateTimeOffset dates)
         {
             var filler = new Filler<VideoMetadata>();
 
             filler.Setup()
-                    .OnType<DateTimeOffset>().Use(GetRandomDateTime);
+                    .OnType<DateTimeOffset>().Use(dates);
 
             return filler;
         }
