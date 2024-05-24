@@ -99,5 +99,42 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+        {
+            //given
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
+            var serviceException = new Exception();
+
+            var failedVideoMetadataServiceException = new FailedVideoMetadataServiceException(
+                message: "Failed video metadata service error occured, please contact support.",
+                innerException: serviceException);
+
+            var expectedVideoMetadataServiceException = new VideoMetadataServiceException(
+                message: "Video metadata service error occured , contact support.",
+                innerException: failedVideoMetadataServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertVideoMetadataAsync(randomVideoMetadata)).ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<VideoMetadata> addVideoMetadataTask = this.videoMetadataService.AddVideoMetadataAsync(randomVideoMetadata);
+
+            VideoMetadataServiceException actualVideoMetadataServiceException =
+                await Assert.ThrowsAsync<VideoMetadataServiceException>(addVideoMetadataTask.AsTask);
+
+            //then
+            actualVideoMetadataServiceException.Should().BeEquivalentTo(expectedVideoMetadataServiceException);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+                SameExceptionAs(expectedVideoMetadataServiceException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertVideoMetadataAsync(randomVideoMetadata), Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
