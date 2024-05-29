@@ -16,10 +16,14 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
         public async Task ShouldAddVideoMetadataAsync()
         {
             //given
-            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
+            DateTimeOffset randomDate = GetRandomDateTime();
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata(randomDate);
             VideoMetadata inputVideoMetadata = randomVideoMetadata;
             VideoMetadata persistedVideoMetadata = inputVideoMetadata;
             VideoMetadata expectedVideoMetadata = persistedVideoMetadata.DeepClone();
+
+            this.dateTimeBrokerMock.Setup(broker =>
+               broker.GetCurrentDateTimeOffset()).Returns(randomDate);  
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertVideoMetadataAsync(inputVideoMetadata))
@@ -33,11 +37,16 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             actualVideoMetadata.Should().BeEquivalentTo(
                 expectedVideoMetadata);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertVideoMetadataAsync(inputVideoMetadata),
                     Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

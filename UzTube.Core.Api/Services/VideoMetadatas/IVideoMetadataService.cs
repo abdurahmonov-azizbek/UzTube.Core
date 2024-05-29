@@ -7,8 +7,16 @@ using UzTube.Core.Api.Models.VideoMetadatas;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
-    internal interface IVideoMetadataService
+    public interface IVideoMetadataService
     {
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataValidationException"></exception>
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataDependencyValidationException"></exception>
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataDependencyException"></exception>
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataServiceException"></exception>
         ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata);
+
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataDependencyException"></exception>
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataServiceException"></exception>
+        IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
     }
 }
