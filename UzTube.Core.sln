@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzTube.Core.Api", "UzTube.Core.Api\UzTube.Core.Api.csproj", "{AD59F275-4704-41E1-835E-9C3CEE41A90F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UzTube.Core.Api.Tests.Unit", "UzTube.Core.Api.Tests.Unit\UzTube.Core.Api.Tests.Unit.csproj", "{3640ACCA-13B5-4101-BABC-148D95C48985}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzTube.Core.Api.Tests.Unit", "UzTube.Core.Api.Tests.Unit\UzTube.Core.Api.Tests.Unit.csproj", "{3640ACCA-13B5-4101-BABC-148D95C48985}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UzTube.Core.Api.Infrastructure.Build", "UzTube.Core.Api.Infrastructure.Build\UzTube.Core.Api.Infrastructure.Build.csproj", "{2865CC07-C1AF-4F1D-8C53-7A97E6E8CB7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{3640ACCA-13B5-4101-BABC-148D95C48985}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3640ACCA-13B5-4101-BABC-148D95C48985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3640ACCA-13B5-4101-BABC-148D95C48985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2865CC07-C1AF-4F1D-8C53-7A97E6E8CB7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2865CC07-C1AF-4F1D-8C53-7A97E6E8CB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2865CC07-C1AF-4F1D-8C53-7A97E6E8CB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2865CC07-C1AF-4F1D-8C53-7A97E6E8CB7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F35A97F-8E32-4AD3-B587-D602F1C9A01C}
 	EndGlobalSection
 EndGlobal
