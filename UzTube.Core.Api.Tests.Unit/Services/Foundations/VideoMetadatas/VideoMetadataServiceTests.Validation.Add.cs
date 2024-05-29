@@ -158,5 +158,53 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidMinutes))]
+        public async Task ShouldThrowValidationExceptionIfCreatedDateIsNotRecentAndLogItAsync(int invalidMinutes)
+        {
+            //given
+            DateTimeOffset randomDate = GetRandomDateTime();
+            DateTimeOffset invalidDateTime = randomDate.AddMinutes(invalidMinutes);
+            VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata(invalidDateTime);
+            VideoMetadata invalidVideoMetadata = randomVideoMetadata;
+            var invalidVideoMetadataException = new InvalidVideoMetadataException(
+                message: "Video metadata is invalid.");
+
+            invalidVideoMetadataException.AddData(
+                key: nameof(VideoMetadata.CreatedDate),
+                values: "Date is not recent");
+
+            var expectedVideoMetadataValicationException =
+                new VideoMetadataValidationException(
+                    message: "Video metadata validation error occured, fix the errors and try again.",
+                    innerException: invalidVideoMetadataException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+               broker.GetCurrentDateTimeOffset()).Returns(randomDate);
+
+            //when
+            ValueTask<VideoMetadata> addVideoMetadataTask = this.videoMetadataService.AddVideoMetadataAsync(invalidVideoMetadata);
+
+            VideoMetadataValidationException actualVideoMetadataValidationException =
+                await Assert.ThrowsAsync<VideoMetadataValidationException>(addVideoMetadataTask.AsTask);
+
+            //then
+            actualVideoMetadataValidationException.Should()
+                .BeEquivalentTo(expectedVideoMetadataValicationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+                SameExceptionAs(expectedVideoMetadataValicationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
