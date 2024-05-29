@@ -53,5 +53,48 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string exceptionMessage = GetRandomString();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedVideoMetadataServiceException =
+                new FailedVideoMetadataServiceException(
+                    message: "Failed video metadata service error occured, please contact support.",
+                    innerException: serviceException);
+
+            var expectedVideoMetadataServiceException =
+                new VideoMetadataServiceException(
+                    message: "Video metadata service error occured, contact support.",
+                    innerException: failedVideoMetadataServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllVideoMetadatas()).Throws(serviceException);
+
+            // when
+            Action retrieveAllVideoMetadatasAction = () =>
+                this.videoMetadataService.RetrieveAllVideoMetadatas();
+
+            VideoMetadataServiceException actualVideoMetadataServiceException =
+                Assert.Throws<VideoMetadataServiceException>(retrieveAllVideoMetadatasAction);
+
+            // then
+            actualVideoMetadataServiceException.Should().BeEquivalentTo(expectedVideoMetadataServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllVideoMetadatas(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedVideoMetadataServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
