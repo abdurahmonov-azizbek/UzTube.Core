@@ -89,6 +89,14 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedVideoMetadataServiceException = new FailedVideoMetadataServiceException(
+                    message: "Failed video metadata service error occured, please contact support.",
+                    innerException: serviceException);
+
+                throw CreateAndLogServiceException(failedVideoMetadataServiceException);
+            }
         }
 
         private Exception CreateAndLogDependencyException(Xeption exception)
