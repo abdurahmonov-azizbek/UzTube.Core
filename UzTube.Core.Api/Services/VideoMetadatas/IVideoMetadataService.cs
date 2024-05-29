@@ -14,5 +14,9 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataDependencyException"></exception>
         /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataServiceException"></exception>
         ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata);
+
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataDependencyException"></exception>
+        /// <exception cref="Models.VideoMetadatas.Exceptions.VideoMetadataServiceException"></exception>
+        IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
     }
 }

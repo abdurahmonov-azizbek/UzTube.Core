@@ -30,5 +30,8 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
 
             return await storageBroker.InsertVideoMetadataAsync(videoMetadata);
         });
+
+        public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
+            TryCatch(() => this.storageBroker.SelectAllVideoMetadatas());
     }
 }

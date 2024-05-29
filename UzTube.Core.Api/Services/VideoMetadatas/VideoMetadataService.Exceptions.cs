@@ -15,6 +15,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
     internal partial class VideoMetadataService
     {
         private delegate ValueTask<VideoMetadata> ReturningVideoMetadataFunction();
+        private delegate IQueryable<VideoMetadata> ReturningVideoMetadatasFunction();
 
         private async ValueTask<VideoMetadata> TryCatch(ReturningVideoMetadataFunction returningVideoMetadataFunction)
         {
@@ -70,6 +71,18 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
                     innerException: exception);
 
                 throw CreateAndLogServiceException(failedVideoMetadataServiceException);
+            }
+        }
+
+        private IQueryable<VideoMetadata> TryCatch(ReturningVideoMetadatasFunction returningVideoMetadatasFunction)
+        {
+            try
+            {
+                return returningVideoMetadatasFunction();
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 

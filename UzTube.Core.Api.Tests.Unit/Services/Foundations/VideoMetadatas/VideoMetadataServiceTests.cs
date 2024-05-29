@@ -45,6 +45,12 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
         public static VideoMetadata CreateRandomVideoMetadata(DateTimeOffset date) =>
            CreateVideoMetadataFiller(date).Create();
 
+        public static IQueryable<VideoMetadata> CreateRandomVideoMetadatas()
+        {
+            return CreateVideoMetadataFiller(dates: GetRandomDateTime())
+                    .Create(count: GetRandomNumber()).AsQueryable();
+        }
+
         private static Filler<VideoMetadata> CreateVideoMetadataFiller(DateTimeOffset dates)
         {
             var filler = new Filler<VideoMetadata>();
