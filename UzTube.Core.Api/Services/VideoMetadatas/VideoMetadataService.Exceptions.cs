@@ -80,9 +80,14 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
             {
                 return returningVideoMetadatasFunction();
             }
-            catch (Exception)
+            catch (SqlException sqlException)
             {
-                throw;
+                var failedVideoMetadataStorageException =
+                    new FailedVideoMetadataStorageException(
+                        message: "Failed video metadata error occured, contact support.",
+                        innerException: sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
             }
         }
 
