@@ -7,7 +7,7 @@ using UzTube.Core.Api.Models.VideoMetadatas;
 
 namespace UzTube.Core.Api.Services.VideoMetadatas
 {
-    internal interface IVideoMetadataService
+    public interface IVideoMetadataService
     {
         ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata);
     }
