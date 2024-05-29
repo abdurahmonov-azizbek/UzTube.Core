@@ -101,6 +101,49 @@ namespace UzTube.Core.Api.Tests.Unit.Services.Foundations.VideoMetadatas
         }
 
         [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
+        {
+            //given
+            VideoMetadata someVideoMetadata = CreateRandomVideoMetadata();
+            var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
+            var lockedVideoMetadataException = new LockedVideoMetadataException(
+                message: "Video metadata is locked, please try again.",
+                innerException: dbUpdateConcurrencyException);
+
+            var expectedVideoMetadataDependencyValidationException =
+                new VideoMetadataDependencyValidationException(
+                    message: "Video metadata dependency validation error occurred, fix the errors and try again.",
+                    innerException: lockedVideoMetadataException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dbUpdateConcurrencyException);
+
+            //when
+            ValueTask<VideoMetadata> addVideoMetadataTask = this.videoMetadataService.AddVideoMetadataAsync(someVideoMetadata);
+
+            VideoMetadataDependencyValidationException actualVideoMetadataDependencyValidationException =
+                await Assert.ThrowsAsync<VideoMetadataDependencyValidationException>(addVideoMetadataTask.AsTask);
+
+            //then
+            actualVideoMetadataDependencyValidationException.Should()
+                .BeEquivalentTo(expectedVideoMetadataDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             //given
