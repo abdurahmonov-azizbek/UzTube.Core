@@ -47,6 +47,14 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsVideoMetadataException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedVideoMetadataException = new LockedVideoMetadataException(
+                    message: "Video metadata is locked, please try again.",
+                    innerException: dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedVideoMetadataException);
+            }
             catch (DbUpdateException databaseUpdateException)
             {
                 var failedVideoMetadataStorageException = new FailedVideoMetadataStorageException(
@@ -90,7 +98,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         private Exception CreateAndLogDependencyValidationException(Xeption exception)
         {
             var videoMetadataDependencyValidationException = new VideoMetadataDependencyValidationException(
-                message: "Video metadata Dependency validation error occured , fix the errors and try again",
+                message: "Video metadata dependency validation error occurred, fix the errors and try again.",
                 innerException: exception);
 
             this.loggingBroker.LogError(videoMetadataDependencyValidationException);
