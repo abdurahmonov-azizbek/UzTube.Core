@@ -122,7 +122,7 @@ namespace UzTube.Core.Api.Services.VideoMetadatas
         {
             var videoMetadataValidationException =
                 new VideoMetadataValidationException(
-                    message: "Video metadata validation error occured, fix errors and try again.",
+                    message: "Video metadata validation error occured, fix the errors and try again.",
                     innerException: innerException);
 
             this.loggingBroker.LogError(videoMetadataValidationException);
