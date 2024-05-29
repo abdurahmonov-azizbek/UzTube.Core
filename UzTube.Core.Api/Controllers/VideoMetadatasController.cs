@@ -50,5 +50,23 @@ namespace UzTube.Core.Api.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult<IQueryable<VideoMetadata>> GetAllVideoMetadatas()
+        {
+            try
+            {
+                IQueryable<VideoMetadata> allVideoMetadatas = this.videoMetadataService.RetrieveAllVideoMetadatas();
+
+                return Ok(allVideoMetadatas);
+            }
+            catch (VideoMetadataDependencyException videoMetadataDependencyException)
+            {
+                return InternalServerError(videoMetadataDependencyException);
+            }
+            catch (VideoMetadataServiceException videoMetadataServiceException)
+            {
+                return InternalServerError(videoMetadataServiceException);
+            }
+        }
     }
 }
